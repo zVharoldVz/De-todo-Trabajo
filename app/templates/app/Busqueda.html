@@ -1,0 +1,109 @@
+{% extends "app/layout.html" %}
+{% load Filtrospersonalizado %}
+{% block content %}
+<section class="py-2">
+  <div class="container px-3 my-2">
+      <div class="row gx-5">
+          <div class="col-lg-2 px-3 my-2">
+              <div class="d-flex align-items-center mt-lg-5 mb-4">
+                  <img class="img-fluid rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                  <div class="ms-3">
+                      <div class="fw-bold">Valerie Luna</div>
+                      <div class="text-muted">News, Business</div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-10 px-3 my-2">
+            <section class="py-5">
+              <div class="container px-2 my-2">
+                <article>
+                  <!-- Post header-->
+                  <header class="mb-4">
+                      <!-- Post title-->
+                      <h1 class="fw-bolder mb-1">Busqueda "{{valor}}"</h1>
+                      <form class="d-flex flex-row-reverse bd-highlight" method="GET">
+                        <div class="d-flex flex-row-reverse bd-highlight">
+                          <input type="hidden" name="busqueda" value="{{valor}}"></input>
+                          <select  class="form-select bd-highlight" name="browse" onchange="this.form.submit()">
+                              <option value="0">Mayor a Menor Valorado </option>
+                              <option value="2">Mayor a Menor Valorado </option>
+                              <option value="3">Mayor a Menor Pedidos </option>
+                              <option value="4">Mayor a Menor Pedidos </option>
+                          </select>
+                        </div>
+                        
+                      </form>
+                  </header>
+                  <!-- Preview image figure-->
+                </article>
+
+                  <div class="row gx-2 row-cols-1 row-cols-sm-2 row-cols-xl-4">
+                  {% for Ha in habilidades %}
+                    <div class="col-lg-4 mb-5" id="myTable">
+                      <div class="card h-100 shadow border-0">
+                          <div id="carouselExampleSlidesOnly" class="carousel slide card-img-top" height="160px" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                              {% for foto in Ha.id|existing_Fototrabajo %}
+                                {% get_active forloop.counter0 as dato%}
+                                <div class="carousel-item {{ dato }}">
+                                  <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 img_prueba"  height="160px" style="object-fit: scale-down" alt="...">
+                                </div>
+                              {% empty %}
+                                <div class="carousel-item active">
+                                  <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Sin+Imagen" class="d-block w-100" alt="...">
+                                </div>
+                              {% endfor %}
+                            </div>
+                          </div>
+                          
+                          <div class="card-body p-4">
+                            <article>
+                              <header class="mb-1">
+                              <a class="text-decoration-none link-dark stretched-link truncate-1" href="{% url 'Perfil_list' Ha.id %}"><div class="h5 card-title mb-3 text-capitalize ">{{Ha.nombrehabilidad}}</div></a>
+                              </header>
+                              <section class="mb-5">
+                                <p class="fs-6 mb-4 truncate-4">{{Ha.descripcion}}</p>
+                              </section>
+                              <footer><div class="small m-0 fst-italic ">Publicado por {{ Ha.user.first_name }} {{ Ha.user.last_name }}</div></footer>
+                            </article>
+                          </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  </div>
+                    
+                  {% if is_paginated %}
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-end">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                          <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+
+                        {% for n in page_obj.paginator.page_range %}
+                          {% if page_obj.number == n %}
+                          <li class="page-item active"><span class="page-link">{{ n }}</span></li>
+                          {% elif n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}
+                          <li class="page-item">
+                            <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ n }}{% if parametros.urlencode %}&{{ parametros.urlencode }}{% endif %}">{{ n }}</a>
+                          </li>
+                          {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                          <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                      </ul>
+                    </nav>
+                  {% endif %}
+
+              </div>
+            </section>
+          </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

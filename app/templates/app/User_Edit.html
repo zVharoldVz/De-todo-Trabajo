@@ -1,0 +1,22 @@
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modificar Bibliografia</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form class="form-floating row g-3" method="post" action="{% url 'Edit_User' %}">
+    {% csrf_token %}
+    <div class="modal-body">
+      <div class="card" >
+        <div class="card-body">
+          {{ form.as_p }}
+          {{ formExtra.as_p }}
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Modificar</button>
+    </div>
+</form>
+
+

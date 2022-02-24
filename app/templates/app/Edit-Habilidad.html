@@ -1,0 +1,41 @@
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modificar Habilidad</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form class="form-floating row g-3" method="post" enctype="multipart/form-data" action="{% url 'Habili_edit' idhabilidad  %}">
+    {% csrf_token %}
+    <div class="modal-body">
+      <div class="card" >
+        <div class="card-body">
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating">
+                    {{ formhabilidadesEdi.nombrehabilidad }}
+                  <label for="floatingInputGrid">Ingrese Habilidad</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                    {{ formhabilidadesEdi.tipoTrabajo }}
+                  <label for="floatingSelectGrid">Tipo de trabajo</label>
+                </div>
+              </div>
+              <div class="form-floating">
+                {{ formhabilidadesEdi.descripcion }}
+                <label for="floatingTextarea2">Descripcion</label>
+              </div>
+              <div class="input-group mb-3">
+                {{ formhabilidadesEdi.images }}
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Modificar</button>
+    </div>
+</form>
+
+

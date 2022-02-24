@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Agregar Habilidad</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form class="form-floating row g-3" enctype="multipart/form-data" method="post" action="{% url 'CreateHabili' %}">
+  {% csrf_token %}
+  <div class="modal-body">
+    <div class="card" >
+      <div class="card-body">
+          <div class="row g-2">
+            <div class="col-md">
+              <div class="form-floating">
+                  {{ formhabildades.nombrehabilidad }}
+                <label for="floatingInputGrid">Ingrese Habilidad</label>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-floating">
+                  {{ formhabildades.tipoTrabajo }}
+                <label for="floatingSelectGrid">Tipo de trabajo</label>
+              </div>
+            </div>
+            <div class="form-floating">
+              {{ formhabildades.descripcion }}
+              <label for="floatingTextarea2">Descripcion</label>
+            </div>
+
+            <div class="input-group mb-3">
+              {{ formhabildades.images }}
+            </div>
+          </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary">Agregar</button>
+  </div>
+</form>
+{% block Script %}
+  <script>
+        //<img id="imagenPrevisualizacion">
+        //<div id="demo"></div>
+    const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
+        $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+
+      // Escuchar cuando cambie
+        $seleccionArchivos.addEventListener("change", () => {
+        // Los archivos seleccionados, pueden ser muchos o uno
+        const archivos = $seleccionArchivos.files;
+        // Si no hay archivos salimos de la función y quitamos la imagen
+        if (!archivos || !archivos.length) {
+            $imagenPrevisualizacion.src = "";
+            return;
+        }
+        let txt = "";
+        for (let i = 0, numFiles = archivos.length; i < numFiles; i++) {
+            const file = archivos[i];
+        //    const primerArchivo = archivos[x];
+            const objectURL = URL.createObjectURL(file);
+            txt += "<img src='"+objectURL+"'>" + " ";
+        }
+        document.getElementById("demo").innerHTML = txt;
+        // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+        //const primerArchivo = archivos[0];
+        // Lo convertimos a un objeto de tipo objectURL
+        //const objectURL = URL.createObjectURL(primerArchivo);
+        // Y a la fuente de la imagen le ponemos el objectURL
+        //$imagenPrevisualizacion.src = objectURL;
+        });
+  </script>
+{% endblock %}
