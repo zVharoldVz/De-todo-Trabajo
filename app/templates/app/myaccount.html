@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center justify-content-center">
                 <div class="text-center">
                   <h5 class="card-title">Bibliografia</h5>
-                  {% ifequal Foto_perfil.imagen None %}
+                  {% ifequal Foto_perfil.imagen "" %}
                   <img class="img-fluid rounded-circle mb-4 px-4" src="{% static 'app/images/User-Login.png' %}" />
                   {% else %}
                   <img class="img-fluid rounded-circle mb-4 px-4" src="{{Foto_perfil.imagen.url}}" alt="..." />
