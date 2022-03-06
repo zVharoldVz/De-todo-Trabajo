@@ -77,3 +77,17 @@ class FotoValoracion(models.Model):
     def __str__(self) -> str:
         return self.fotoValoracion
 
+class Pedido(models.Model):
+    fecha = models.DateTimeField()
+    estado = models.CharField(max_length=20)
+    habilidad = models.ForeignKey(Habilidades, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return self.user.username
+
+class Favoritos(models.Model):
+    fecha= models.DateTimeField()
+    habilidad = models.ForeignKey(Habilidades, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return self.user.username

@@ -19,4 +19,7 @@ urlpatterns = [
     path('Perfil/<int:id>/', views.Busquedaanuncio, name='Perfil_list'),
     path('Resultado/', views.Busqueda.as_view(), name='busqueda'),
     path('prueba/', views.prueba, name='prueba'),
+    path('Favorito/', views.Favorito, name='Favorite'),
+    path('SolicitudPedido/', views.Realizar_Pedido, name='SoliPedidos'),
+    path('Pedidos/', views.Pedidos.as_view(), name='Pedidos'),
     ] 

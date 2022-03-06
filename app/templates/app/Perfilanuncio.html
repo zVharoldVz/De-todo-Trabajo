@@ -29,7 +29,7 @@
                     <div class="card-title">
                         <div class="d-flex align-items-center">
                             <div class="small">
-                                <div class="text-muted">Trabajos realizados: 1024</div>
+                                <div class="text-muted">Trabajos realizados: {{habilidades.nomeroTrabjos}}</div>
                                 <div class="bg-gradient mb-2 rating"  data-rateyo-rating="5"></div>
                             </div>
                         </div>
@@ -37,9 +37,16 @@
                     <p class="card-text" style="min-height: 31vh">{{habilidades.descripcion}}.</p>
                     </div>
 
-                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-center py-3 card-footer border-0">
-                        <a class="btn btn-success btn-lg px-4 me-sm-3" href="#features">Contactar</a>
-                        <a class="btn btn-info btn-lg px-4" href="#!">Anadir a favorito</a>
+                    <div class="d-grid d-sm-flex justify-content-sm-center justify-content-xl-center py-3 card-footer border-0">
+                        <form action="{% url 'SoliPedidos' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="id" value="{{habilidades.id}}" readonly>
+                            <button type="submit" class="btn btn-primary btn-lg px-4 me-sm-3" >Adquirir Servicios</button>
+                        </form>
+                        <form action="{% url 'Favorite' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="txtCodigo" value="{{habilidades.id}}" readonly>
+                            <button class="btn btn-danger btn-lg" type="submit"><i class="fa-regular fa-heart"></i><span class="badge" id="favoritenum">4</span></button>
+                        </form>
                     </div>
 
                 </div>
@@ -48,6 +55,7 @@
         <section>
             
         </section>
+        {% include 'app/Mensaje.html' %}
     </div>
 </section>
 <!-- Comments section-->
@@ -149,4 +157,31 @@
         </div>
     </div>
 </section>
+{% endblock %}
+{% block Script %}
+<script>
+   //<button class="btn btn-danger btn-lg" onclick="change()"><i class="fa-regular fa-heart"></i><span class="badge" id="favoritenum">4</span></button>
+    function change(){
+        var habili='{{habilidades.id}}';
+        $.ajax({
+            type: "GET",
+            url: "{% url 'Favorite' %}",
+            data : {'habili': habili},
+            success: function (data) { 
+               // document.location.reload(true);
+                $("#favoritenum").html(data['success']); 
+                    if(data.not_authenticated) {
+
+                        window.location.replace("{% url 'login' %}");
+                    }
+                    else {
+                        toastr.success(data.message);
+                    }  
+                },
+            error: function(rs, e) {
+                    alert(rs.responseText);
+                }
+        });
+    };
+</script>
 {% endblock %}

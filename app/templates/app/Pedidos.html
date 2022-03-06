@@ -1,0 +1,122 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% load Filtrospersonalizado %}
+{% block content %}
+{%  Pedido_Solicitados Pedido user.id as PedidoSolicitados %}
+{%  Pedido_Realizado Pedido user.id as PedidoRealizado %}
+<section class="py-5">
+    <div class="container px-2 my-2">
+        <article>
+        <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1">Pedidos</h1>
+            </header>
+        <!-- Preview image figure-->
+        </article>
+        <div class="tr-job-posted section-padding">
+            <div class="container">
+                <div class="job-tab text-center">
+                    <ul class="nav nav-tabs justify-content-center " id="myTab" role="tablist">
+                        <li role="presentation">
+                            <button class="active position-relative" id="home-tab" data-bs-toggle="tab" data-bs-target="#Solicitudes" type="button" role="tab" aria-controls="home" aria-selected="true">Mis Solicitudes 
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{PedidoSolicitados.count}} <span class="visually-hidden">unread messages</span></span>
+                            </button>
+                        </li>
+                        <li role="presentation">
+                            <button class="position-relative" id="profile-tab" data-bs-toggle="tab" data-bs-target="#Pedidos" type="button" role="tab" aria-controls="profile" aria-selected="false">Mis Pedidos
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{PedidoRealizado.count}} <span class="visually-hidden">unread messages</span></span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="Solicitudes" role="tabpanel" aria-labelledby="home-tab">
+                    {% for Pe in PedidoSolicitados %}
+                    <div class="card shadow border-0 mb-3">
+                        <div class="card-body">
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight h5 align-self-center">{{Pe.habilidad.nombrehabilidad}}</div>
+                                <div class="p-2 bd-highlight badge bg-primary bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
+                                <div class="p-2 bd-highlight align-self-center">{{Pe.fecha}}</div>
+                            </div>
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">Solicitado por: {{ Pe.user.first_name }} {{ Pe.user.last_name }}</div>
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <button type="button" class="btn btn-success">Aceptar</button>
+                                </div>
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <button type="button" class="btn btn-danger">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="Pedidos" role="tabpanel" aria-labelledby="profile-tab">
+                    {% for Pe in PedidoRealizado %}
+                    <div class="card shadow border-0 mb-3">
+                        <div class="card-body">
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight h5 align-self-center">{{Pe.habilidad.nombrehabilidad}}</div>
+                                <div class="p-2 bd-highlight badge bg-primary bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
+                                <div class="p-2 bd-highlight align-self-center">{{Pe.fecha}}</div>
+                            </div>
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">Lo has solicitado de : {{ Pe.user.first_name }} {{ Pe.user.last_name }}</div>
+                                {% if Pe.estado == 'Pendiente' %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    Esperando...
+                                </div>
+                                {% else  %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <button type="button" class="btn btn-primary">Detalle</button>
+                                </div>
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <button type="button" class="btn btn-primary">Finalizar Pedido</button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+        {% if is_paginated %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for n in page_obj.paginator.page_range %}
+                {% if page_obj.number == n %}
+                <li class="page-item active"><span class="page-link">{{ n }}</span></li>
+                {% elif n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}
+                <li class="page-item">
+                <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ n }}{% if parametros.urlencode %}&{{ parametros.urlencode }}{% endif %}">{{ n }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'busqueda' %}?busqueda={{valor}}&page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,13 +1,14 @@
+INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
+VALUES ( 1,"pbkdf2_sha256$260000$I73Et5pTVLUmV4AQWU5xJn$9Zp3hFY/k6lBxGP9LoDhfglQiiqkBWW7Iam8bnDp4R4=","2022-02-23 01:21:22.382335","2022-02-14 02:35:22.608208",1,"harold","osorio cruzado","harold_54430@hotmail.com",1,1,"harold" )
+INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
+VALUES ( 2,"pbkdf2_sha256$260000$Npvm7wQ4i3aItPkLu3iR6i$a6ihozICIAGK47hTmM164oqkxJkdgXbS+DrMTz903Zo=","2022-02-15 23:54:40.678198","2022-02-15 23:12:12.138980",1,"harold1","osorio cruzado IMPOMAXS","harold_54430@hotmail.com",1,1,"harold" );
+INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
+VALUES (3,"pbkdf2_sha256$260000$uOa0Cbgbm8BpNTnhftDKZ9$s0XIJZjx8T6gRxdaM3CmVkNzHt4VVhJBDgbRwbfjX74=","2022-02-17 00:36:46.206999","2022-02-17 00:36:08.156063",0,"harold2","","harold_54430@hotmail.com",0,1,"" );
+INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
+VALUES ( 4,"pbkdf2_sha256$260000$X5KOLZ2aMFEC9cyEVRd9UE$97vAC5+Qdxaiph4fngZ5jVHP3dwxTsPq7ohNzBw+nQI=","2022-02-17 02:33:01.702682","2022-02-17 02:32:54.686601",0,"harold3","","harold_54430@hotmail.com",0,1,"" );
 
 INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
-VALUES ( 1,"pbkdf2_sha256$260000$I73Et5pTVLUmV4AQWU5xJn$9Zp3hFY/k6lBxGP9LoDhfglQiiqkBWW7Iam8bnDp4R4=","2022-02-23 01:21:22.382335",1,"harold","osorio cruzado","harold_54430@hotmail.com",1,1,"2022-02-14 02:35:22.608208","harold" )
-INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
-VALUES ( 2,"pbkdf2_sha256$260000$Npvm7wQ4i3aItPkLu3iR6i$a6ihozICIAGK47hTmM164oqkxJkdgXbS+DrMTz903Zo=","2022-02-15 23:54:40.678198",1,"harold1","osorio cruzado IMPOMAXS","harold_54430@hotmail.com",1,1,"2022-02-15 23:12:12.138980","harold" );
-INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
-VALUES (3,"pbkdf2_sha256$260000$uOa0Cbgbm8BpNTnhftDKZ9$s0XIJZjx8T6gRxdaM3CmVkNzHt4VVhJBDgbRwbfjX74=","2022-02-17 00:36:46.206999",0,"harold2","","harold_54430@hotmail.com",0,1,"2022-02-17 00:36:08.156063","" );
-INSERT INTO "auth_user" ( "id","password","date_joined","last_login", "is_superuser", "username", "last_name", "email", "is_staff","is_active","first_name") 
-VALUES ( 4,"pbkdf2_sha256$260000$X5KOLZ2aMFEC9cyEVRd9UE$97vAC5+Qdxaiph4fngZ5jVHP3dwxTsPq7ohNzBw+nQI=","2022-02-17 02:33:01.702682",0,"harold3","","harold_54430@hotmail.com",0,1,"2022-02-17 02:32:54.686601","" );
-
+VALUES ( 4,"pbkdf2_sha256$260000$X5KOLZ2aMFEC9cyEVRd9UE$97vAC5+Qdxaiph4fngZ5jVHP3dwxTsPq7ohNzBw+nQI=","2022-02-17 02:33:01.702682","2022-02-17 02:32:54.686601",0,"harold3","","harold_54430@hotmail.com",0,1,"" );
 INSERT INTO "app_tipotrabajo" ( "id", "tipotrabajo") VALUES (1,"Albañil");
 INSERT INTO "app_tipotrabajo" ( "id", "tipotrabajo") VALUES (2,"Electricista");
 INSERT INTO "app_tipotrabajo" ( "id", "tipotrabajo") VALUES (3,"Camarografo");
@@ -48,3 +49,10 @@ INSERT INTO "app_fototrabajo" ( "id", "fotoTrabajo", "habilidad_id") VALUES ( 25
 INSERT INTO "app_fototrabajo" ( "id", "fotoTrabajo", "habilidad_id") VALUES ( 26,"DeTodoTrabajo/FotoTrabajo/262544095_312897624173836_3264170854886474489_n.jpg",19 );
 INSERT INTO "app_fototrabajo" ( "id", "fotoTrabajo", "habilidad_id") VALUES ( 27,"DeTodoTrabajo/FotoTrabajo/260077622_995901021141005_6613930230373901908_n_tI7N07f.jpg",36 );
 INSERT INTO "app_fototrabajo" ( "id", "fotoTrabajo", "habilidad_id") VALUES ( 28,"DeTodoTrabajo/FotoTrabajo/272818837_4811155785626587_9112371571623836675_n.jpg",37 );
+
+
+INSERT INTO "app_pedido" ( "estado", "fecha", "habilidad_id", "id", "user_id") VALUES ( "Pendiente", "2022-03-04 15:02:45.850459", 19, 1,1 );
+INSERT INTO "app_pedido" ( "estado", "fecha", "habilidad_id", "id", "user_id") VALUES ( "Pendiente", "2022-03-05 16:01:04.794044", 19, 2,2 );
+INSERT INTO "app_pedido" ( "estado", "fecha", "habilidad_id", "id", "user_id") VALUES ( "Pendiente", "2022-03-05 16:03:04.846998", 19, 3,2 );
+
+

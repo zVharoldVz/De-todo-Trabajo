@@ -3,6 +3,7 @@
   <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {{ user.username }}!</a>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
       <li><a class="dropdown-item" href="{% url 'myaccount' %}">Mi Cuenta</a></li>
+      <li><a class="dropdown-item" href="{% url 'Pedidos' %}">Solicitudes</a></li>
       <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesion</a></li>
       <li><a class="dropdown-item" href="{% url 'prueba' %}">prueba</a></li>
   </ul>

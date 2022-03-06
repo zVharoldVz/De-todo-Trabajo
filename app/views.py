@@ -1,10 +1,13 @@
 
+from datetime import datetime
 from typing import ContextManager
+from venv import create
 from django.conf import settings
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render,get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.contrib import messages
@@ -166,15 +169,47 @@ class Busqueda(ListView):
                 queryset = Habilidades.objects.filter(nombrehabilidad__contains=("harold")).select_related('tipoTrabajo','user')
         return queryset
 
-
-def Busquedaanuncio(request, id):
+def Busquedaanunciofuncion(id):
     context ={}
     habilidades = Habilidades.objects.select_related('tipoTrabajo','user').get(id=id)
     context["habilidades"] = habilidades
     context["Foto_perfil"] = Foto_perfil.objects.get(user_id=habilidades.user.id)
-    return render(request,"app/Perfilanuncio.html", context)
+    return context
 
+def Busquedaanuncio(request, id):
+    return render(request,"app/Perfilanuncio.html", Busquedaanunciofuncion(id))
 
+@login_required
+def Favorito(request):
+    idhabi= request.POST['txtCodigo']
+    try:
+        favo = Favoritos.objects.get(user_id=request.user.id,habilidad_id=idhabi)
+        favo.delete()
+        messages.info(request, 'Se elimino de tu favorito')
+    except Favoritos.DoesNotExist:
+        Favoritos.objects.create(fecha=datetime.now(),user_id=request.user.id,habilidad_id=idhabi)
+        messages.success(request, 'Se agrego en tu favorito')
+
+    return redirect ('Perfil_list',idhabi)
+
+@login_required
+def Realizar_Pedido(request):
+    idhabi= request.POST['id']
+
+    Pedido.objects.create(fecha=datetime.now(),user_id=request.user.id,habilidad_id=idhabi,estado='Pendiente')
+    messages.success(request, 'Solicitastes los servicios')
+    return redirect ('Perfil_list',idhabi)
+
+class Pedidos(LoginRequiredMixin,ListView):
+    template_name = 'app/Pedidos.html'
+    context_object_name = 'Pedido'
+
+    def get_context_data(self, **kwargs):
+        context = super(Pedidos, self).get_context_data(**kwargs)
+        return context
+    def get_queryset(self):
+        queryset = Pedido.objects.select_related('habilidad','user')
+        return queryset
 
 def prueba(request):
     context ={}
