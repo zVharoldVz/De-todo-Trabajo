@@ -18,7 +18,7 @@ creation of the User instance, then execute the code in the body of the function
 def create_user(sender, instance, created, **kwargs):
     if created:
         ExtraDato.objects.create(telefono="", dni="", Direcion="",user_id=instance.id)
-        Foto_perfil.objects.create(imagen="",user_id=instance.id)
+        Foto_perfil.objects.create(imagen="DeTodoTrabajo/Defaut/User-Login.png",user_id=instance.id)
 
 
 # ExtraDato is a model that extends the User model

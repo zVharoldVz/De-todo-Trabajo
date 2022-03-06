@@ -134,11 +134,7 @@
                             <div class="text-center">
 
                                 <div class="h6 fw-bolder">Datos personales</div>
-                                {% ifequal Foto_perfil.imagen None %}
-                                <img class="img-fluid rounded-circle mb-4 px-4" src="{% static 'app/images/User-Login.png' %}" />
-                                {% else %}
                                 <img class="img-fluid rounded-circle mb-4 px-4" src="{{Foto_perfil.imagen.url}}" alt="..." />
-                                {% endifequal %}
 
                                 <div class="h6 fw-bolder">{{ habilidades.user.first_name }} {{ habilidades.user.last_name }}</div>
                                 <p class="text-muted mb-4"><a href="#!">{{ habilidades.user.email }}</a></p>

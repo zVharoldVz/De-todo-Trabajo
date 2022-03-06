@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5kogxnrlpgbp$rwkbm(50&fu_!ep11rucz2@k$@jvl8kyo@&tz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = false
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["harold54430.pythonanywhere.com"]
 
 
 # Application definition
@@ -121,19 +121,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+MEDIA_ROOT = '/home/harold54430/De-todo-Trabajo/media'
 MEDIA_URL = '/media/'
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-#MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'media')
-#STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'static-only')
-
-#STATICFILES_DIRS = (os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'static'),)
-#TEMPLATE_DIRS = ( os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'templates'),)
+STATIC_ROOT = '/home/harold54430/De-todo-Trabajo/static'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

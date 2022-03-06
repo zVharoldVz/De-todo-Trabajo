@@ -13,11 +13,7 @@
             <div class="d-flex align-items-center justify-content-center">
                 <div class="text-center">
                   <h5 class="card-title">Bibliografia</h5>
-                  {% ifequal Foto_perfil.imagen "" %}
-                  <img class="img-fluid rounded-circle mb-4 px-4" src="{% static 'app/images/User-Login.png' %}" />
-                  {% else %}
                   <img class="img-fluid rounded-circle mb-4 px-4" src="{{Foto_perfil.imagen.url}}" alt="..." />
-                  {% endifequal %}
 
                   <button type="button" class="btn btn-primary modal-example" data-url="{% url 'UploadImageUser' %}">Subir foto</button>
                   <div class="h6 fw-bolder">{{ user.first_name }} {{ user.last_name }}</div>
