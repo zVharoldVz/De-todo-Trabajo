@@ -1,0 +1,82 @@
+{% load Filtrospersonalizado %}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Detalle de la solicitud</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body mb-4 px-4"> 
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <img class="rounded-circle me-3 imgCard contain" src="{{Pedido.habilidad.user.imagen.url}}" alt="..." />
+                    <div class="small">
+                        {% if Pedido.habilidad.user.first_name|length == 0 or  Pedido.habilidad.user.last_name|length == 0 %}
+                        <div class="fw-bold">{{ Pedido.habilidad.user.username }}</div>
+                        {% else %}
+                        <div class="fw-bold">{{ Pedido.habilidad.user.first_name }} {{ Pedido.habilidad.user.last_name }}</div>
+                        {% endif %}
+                        <div class="text-muted">Puntuacion: 4.9</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <img class="rounded-circle me-3 imgCard contain" src="{{Pedido.user.imagen.url}}" alt="..." />
+                    <div class="small">
+                        {% if Pedido.user.first_name|length == 0 or Pedido.user.last_name|length == 0 %}
+                        <div class="fw-bold">{{ Pedido.user.username }}</div>
+                        {% else %}
+                        <div class="fw-bold">{{ Pedido.user.first_name }} {{ Pedido.user.last_name }}</div>
+                        {% endif %}
+                        <div class="text-muted">Puntuacion: 4.7</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-relative m-5">
+        <div class="progress" style="height: 1px;">
+            <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <button type="button" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;">1</button>
+        <button type="button" class="position-absolute top-0 start-33 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;">2</button>
+        <button type="button" class="position-absolute top-0 start-66 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;">3</button>
+        <button type="button" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height:2rem;">4</button>
+    </div>
+    <div class="position-relative m-5">
+        <div class="position-absolute top-0 start-0 translate-middle text-center small" >
+            <div class="fw-bold">Pendiente</div>
+            <div class="text-muted">March 23, 2021</div>
+        </div>
+        <div class="position-absolute top-0 start-33 translate-middle text-center small" >
+            <div class="fw-bold">Aceptado</div>
+            <div class="text-muted">March 23, 2021</div>
+        </div>
+        <div class="position-absolute top-0 start-66 translate-middle text-center small" >
+            <div class="fw-bold">Realizado</div>
+            <div class="text-muted">March 23, 2021</div>
+        </div>
+        <div class="position-absolute top-0 start-100 translate-middle text-center small" >
+            <div class="fw-bold">Finalizado</div>
+            <div class="text-muted">March 23, 2021</div>
+
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+
+
+

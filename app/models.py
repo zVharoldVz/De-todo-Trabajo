@@ -5,37 +5,22 @@ from django.contrib.auth.models import User
 from django.core.validators import  MaxValueValidator
 from django.db.models import signals
 from django.dispatch import receiver 
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
-"""
-When a User is saved, send the post_save signal. When a User is saved and the signal was sent by the
-creation of the User instance, then execute the code in the body of the function
-:param sender: The model class
-:param instance: The object that was just created
-:param created: a boolean; True if a new record was created, False if an existing record was updated
-"""
-@receiver(signals.post_save, sender=User) 
-def create_user(sender, instance, created, **kwargs):
-    if created:
-        ExtraDato.objects.create(telefono="", dni="", Direcion="",user_id=instance.id)
-        Foto_perfil.objects.create(imagen="DeTodoTrabajo/Defaut/User-Login.png",user_id=instance.id)
+
+#@receiver(signals.post_save, sender=User) 
+#def create_user(sender, instance, created, **kwargs):
+#    if created:
 
 
-# ExtraDato is a model that extends the User model
-class ExtraDato(models.Model):
-    telefono = models.CharField(max_length=10)
+class User(AbstractUser):
+    telefono = models.CharField('Télefono', max_length=15)
     dni = models.CharField(max_length=8)
     Direcion = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return self.dni
-        
-# This class is used to store the profile picture of the user
-class Foto_perfil(models.Model):
-    imagen = models.ImageField(upload_to='DeTodoTrabajo/FotoUser/')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return self.user.username
+    imagen = models.ImageField(upload_to='DeTodoTrabajo/FotoUser/',default='DeTodoTrabajo/Defaut/User-Login.png')
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'dni',]
 
 # A tipo trabajo is a type of work
 class TipoTrabajo(models.Model):
@@ -49,7 +34,7 @@ class Habilidades(models.Model):
     descripcion = models.CharField(max_length=1000,default='Sin Descripcion')
     nomeroTrabjos = models.IntegerField(default=0)
     tipoTrabajo = models.ForeignKey(TipoTrabajo, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     def __str__(self) -> str:
         return self.nombrehabilidad
 
@@ -60,12 +45,16 @@ class FotoTrabajo(models.Model):
     def __str__(self) -> str:
         return self.fotoTrabajo
 
+    def delete(self, *args, **kwargs):
+        self.document.delete()
+        return super().delete(*args, **kwargs)
 
 # Clasificacion is a model that has a comentario, puntuacion, and user
 class Clasifiacion(models.Model):
     comentario = models.CharField(max_length=1000)
-    puntuacion = models.PositiveIntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    puntuacion = models.FloatField()
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    habilidad = models.ForeignKey(Habilidades, on_delete=models.CASCADE)
     def __str__(self) -> str:
         return self.comentario
 
@@ -81,13 +70,13 @@ class Pedido(models.Model):
     fecha = models.DateTimeField()
     estado = models.CharField(max_length=20)
     habilidad = models.ForeignKey(Habilidades, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     def __str__(self) -> str:
         return self.user.username
 
 class Favoritos(models.Model):
     fecha= models.DateTimeField()
     habilidad = models.ForeignKey(Habilidades, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     def __str__(self) -> str:
         return self.user.username

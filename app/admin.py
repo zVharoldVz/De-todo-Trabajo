@@ -5,13 +5,12 @@ from .models import *
 class TipoTrabajoAdmin(admin.ModelAdmin):
     list_display = ('id', 'tipotrabajo')
 
-class AlbumImageInline(admin.TabularInline):
-    model = Foto_perfil
-    extra = 3
+#class AlbumImageInline(admin.TabularInline):
+#    model = Foto_perfil
+#    extra = 3
 
-class AlbumAdmin(admin.ModelAdmin):
-    inlines = [ AlbumImageInline, ]
+#class AlbumAdmin(admin.ModelAdmin):
+#    inlines = [ AlbumImageInline, ]
 
 admin.site.register(TipoTrabajo,TipoTrabajoAdmin)
 admin.site.register(Habilidades)
-admin.site.register(Foto_perfil)

@@ -13,9 +13,10 @@
             <div class="d-flex align-items-center justify-content-center">
                 <div class="text-center">
                   <h5 class="card-title">Bibliografia</h5>
-                  <img class="img-fluid rounded-circle mb-4 px-4" src="{{Foto_perfil.imagen.url}}" alt="..." />
-
-                  <button type="button" class="btn btn-primary modal-example" data-url="{% url 'UploadImageUser' %}">Subir foto</button>
+                  <div  class="position-relative">
+                    <img class="imgPerfil cover rounded-circle mb-4 px-4" src="{{user.imagen.url}}" alt="..."  />
+                    <button type="button" class="position-absolute Camara translate-middle btn btn-primary modal-example" data-url="{% url 'UploadImageUser' %}"><i class="fa-solid fa-camera"></i></button>
+                  </div>
                   <div class="h6 fw-bolder">{{ user.first_name }} {{ user.last_name }}</div>
                   <p class="text-muted mb-4"><a href="#!">{{ user.email }}</a></p>
                   
@@ -25,7 +26,8 @@
                   <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-whatsapp"></i></a>
                   <hr>
                   <div class="h6 fw-bolder">
-                    <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Edit_User' %}">Editar</button>
+
+                    <button type="button" class="update-User btn btn-primary" data-form-url="{% url 'Edit_User'%}">Editar</button>
                     <button type="button" class="btn btn-primary">HASTE PRO</button>
                   </div>
                   
@@ -39,52 +41,75 @@
       <section class="py-5">
         <div class="container px-2 my-2">
             <div class="text-center mb-2">
-                <h1 class="fw-bolder">Lista de habilidades</h1>
-                <p class="lead fw-normal text-muted mb-0">Registre sus habilidades</p>
+                <h1 class="fw-bolder">Lista de Servicios</h1>
+                <p class="lead fw-normal text-muted mb-0">Registre sus Servicios</p>
             </div>
             <div class="mb-2">
-              <button type="button" class="btn btn-primary modal-example" data-url="{% url 'CreateHabili' %}" >Registar</button>
+
+              <button id="create-Habiiti" class="btn btn-primary" type="button" name="button">Registar</button>
             </div>
-
+            {% for Ha in habilidades %}
             <div class="row gx-2 row-cols-1 row-cols-sm-2 row-cols-xl-3">
-              {% for Ha in habilidades %}
-                <div class="col-lg-4 mb-5">
-                  <div class="card h-100 shadow border-0">
+              <div class="col-lg-4 mb-5">
+                <div class="card h-100 shadow border-0">
 
-                    <div id="carouselExampleSlidesOnly" class="carousel slide card-img-top" data-bs-ride="carousel">
-                      <div class="carousel-inner">
-                        {% for foto in Ha.id|existing_Fototrabajo %}
-                          {% get_active forloop.counter0 as dato%}
-                          <div class="carousel-item {{ dato }}">
-                            <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 img_prueba"  height="135px"  style="object-fit: scale-down" alt="...">
-                          </div>
-                        {% empty %}
-                          <div class="carousel-item active">
-                            <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Loading.." class="d-block w-100" alt="...">
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-
-                    <div class="card-img-top">
-                      <a type="button" class="btn-close position-absolute top-0 end-0" href="{% url 'Habili_delete' Ha.id  %}" ></a> 
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{ Ha.tipoTrabajo.tipotrabajo }}</div>
-                        <a class="text-decoration-none" href="#!"><h5 class="card-title mb-3">{{Ha.nombrehabilidad}}</h5></a>
-                        <p class="card-text mb-0 text-truncate">{{Ha.descripcion}}</p>
-                        <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Habili_edit' Ha.id %}">Editar</button>
+                  <div id="carouselExampleSlidesOnly" class="carousel slide card-img-top" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      {% for foto in Ha.id|existing_Fototrabajo %}
+                        {% get_active forloop.counter0 as dato%}
+                        <div class="carousel-item {{ dato }}">
+                          <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 img_prueba"  height="135px"  style="object-fit: scale-down" alt="...">
+                        </div>
+                      {% empty %}
+                        <div class="carousel-item active">
+                          <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Loading.." class="d-block w-100" alt="...">
+                        </div>
+                      {% endfor %}
                     </div>
                   </div>
+
+                  <div class="card-img-top">
+                    <a type="button" class="btn-close position-absolute top-0 end-0" href="{% url 'Habili_delete' Ha.id  %}" ></a> 
+                  </div>
+                  <div class="card-body p-4">
+                      <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{ Ha.tipoTrabajo.tipotrabajo }}</div>
+                      <a class="text-decoration-none" href="#!"><h5 class="card-title mb-3">{{Ha.nombrehabilidad}}</h5></a>
+                      <p class="card-text mb-0 text-truncate">{{Ha.descripcion}}</p>
+                      <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Habili_edit' Ha.id %}">Editar</button>
+                      <a type="button" class="btn btn-danger " href="{% url 'Habili_delete' Ha.id  %}" >Eliminar</a> 
+                  </div>
                 </div>
-              {% empty %}
-                <p>Sorry, no athletes in this list.</p>
-              {% endfor %}
+              </div>
             </div>
+            {% empty %}
+            <div class="fa-2x">
+              <span  style="display: inline-block;">
+                <i class="fa-solid fa-arrow-turn-up fa-flip-horizontal"></i> Comienza publicando tus servicios aqui
+              </span>
+              
+            </div>
+              
+
+            {% endfor %}
+            
         </div>
       </section>
+
+     
       <!-- Modal -->
       {% include 'app/ModalTemplate.html' %}
+    </div>
+    <!-- Modal 1 with id="create-book"-->
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        </div>
+      </div>
+      </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content"></div>
+        </div>
     </div>
   </div>
   
@@ -93,3 +118,26 @@
 </div>
 
 {% endblock %}
+{% block extrascripts %}
+<script type="text/javascript">
+  $(function () {
+    //<button type="button" class="btn btn-primary modal-example" data-url="{% url 'CreateHabili' %}" >Registar</button>
+    //<button type="button" class="btn btn-primary modal-example" data-url="{% url 'Edit_User' %}">Editar</button>
+    // Read book buttons
+
+    $(".update-User").each(function () {
+        $(this).modalForm({
+          formURL: $(this).data("form-url"),
+          
+        });
+    });
+
+    // Create book button opens form in modal with id="create-modal"
+    $("#create-Habiiti").modalForm({
+        formURL: "{% url 'CreateHabili' %}",
+        modalID: "#create-modal"
+    });
+
+  });
+</script>
+{% endblock extrascripts %}

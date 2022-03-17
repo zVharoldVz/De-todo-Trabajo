@@ -12,11 +12,8 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $(function () {
-        $(".rating").rateYo({
-            spacing   : "5px",
-            readOnly: true,
-            multiColor: {
+    $(function () { $(".rating").rateYo({ spacing   : "5px",  readOnly: true,
+            multiColor: { 
                     "startColor": "#FF0000", //RED
                     "endColor"  : "#00FF00"  //GREEN
                     },
@@ -31,4 +28,5 @@ $(document).ready(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
+    
 });

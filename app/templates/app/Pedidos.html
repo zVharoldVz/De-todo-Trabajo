@@ -4,6 +4,7 @@
 {% block content %}
 {%  Pedido_Solicitados Pedido user.id as PedidoSolicitados %}
 {%  Pedido_Realizado Pedido user.id as PedidoRealizado %}
+
 <section class="py-5">
     <div class="container px-2 my-2">
         <article>
@@ -36,52 +37,116 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="Solicitudes" role="tabpanel" aria-labelledby="home-tab">
                     {% for Pe in PedidoSolicitados %}
+
                     <div class="card shadow border-0 mb-3">
                         <div class="card-body">
                             <div class="card-title d-flex bd-highlight">
                                 <div class="p-2 flex-grow-1 bd-highlight h5 align-self-center">{{Pe.habilidad.nombrehabilidad}}</div>
-                                <div class="p-2 bd-highlight badge bg-primary bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
+                                {%  get_Color_estado Pe.estado as ColorStado %}
+                                <div class="p-2 bd-highlight badge {{ColorStado}} bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
                                 <div class="p-2 bd-highlight align-self-center">{{Pe.fecha}}</div>
                             </div>
                             <div class="card-title d-flex bd-highlight">
-                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">Solicitado por: {{ Pe.user.first_name }} {{ Pe.user.last_name }}</div>
-                                <div class="p-2 bd-highlight align-self-center">
-                                    <button type="button" class="btn btn-success">Aceptar</button>
+                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle me-3 imgCard contain" src="{{Pe.user.imagen.url}}" alt="..." />
+                                        <div class="small">
+                                            {% if Pe.user.first_name|length == 0 or  Pe.last_name|length == 0 %}
+                                            <div class="fw-bold">{{ Pe.user.username }}</div>
+                                            {% else %}
+                                            <div class="fw-bold">{{ Pe.user.first_name }} {{ Pe.user.last_name }}</div>
+                                            {% endif %}
+                                            {% staruser Pe.user.id as starva%}
+                                            {% if starva != None %}
+                                            <div class="text-muted"><i class="fa-solid fa-star StarValoration" ></i> {{starva}}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="p-2 bd-highlight align-self-center">
-                                    <button type="button" class="btn btn-danger">Cancelar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="tab-pane fade" id="Pedidos" role="tabpanel" aria-labelledby="profile-tab">
-                    {% for Pe in PedidoRealizado %}
-                    <div class="card shadow border-0 mb-3">
-                        <div class="card-body">
-                            <div class="card-title d-flex bd-highlight">
-                                <div class="p-2 flex-grow-1 bd-highlight h5 align-self-center">{{Pe.habilidad.nombrehabilidad}}</div>
-                                <div class="p-2 bd-highlight badge bg-primary bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
-                                <div class="p-2 bd-highlight align-self-center">{{Pe.fecha}}</div>
-                            </div>
-                            <div class="card-title d-flex bd-highlight">
-                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">Lo has solicitado de : {{ Pe.user.first_name }} {{ Pe.user.last_name }}</div>
                                 {% if Pe.estado == 'Pendiente' %}
+                                <form class="p-2 bd-highlight align-self-center" action="{% url 'AceptarSolicitud' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="IdCodigo" value="{{Pe.id}}" readonly>
+                                    <button type="submit" class="btn btn-success">Aceptar</button> 
+                                    <button type="submit" name="cancel" class="btn btn-danger">Cancelar</button>
+                                </form>
+                                {% elif Pe.estado == 'Aceptado' %}
                                 <div class="p-2 bd-highlight align-self-center">
-                                    Esperando...
+                                    <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Detalle_Pedido' Pe.id %}">Detalle</button>
                                 </div>
-                                {% else  %}
+                                {% elif Pe.estado == 'Cancelado' %}
                                 <div class="p-2 bd-highlight align-self-center">
-                                    <button type="button" class="btn btn-primary">Detalle</button>
+                                    Cancelado
                                 </div>
+                                {% else %}
                                 <div class="p-2 bd-highlight align-self-center">
-                                    <button type="button" class="btn btn-primary">Finalizar Pedido</button>
+                                    Finalizado..
                                 </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
+
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="Pedidos" role="tabpanel" aria-labelledby="profile-tab">
+                    {% for Pe in PedidoRealizado %}
+
+                    <div class="card shadow border-0 mb-3">
+                        <div class="card-body">
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight h5 align-self-center">{{Pe.habilidad.nombrehabilidad}}</div>
+                                {%  get_Color_estado Pe.estado as ColorStado %}
+                                <div class="p-2 bd-highlight badge {{ColorStado}} bg-gradient rounded-pill align-self-center">{{Pe.estado}}</div>
+                                <div class="p-2 bd-highlight align-self-center">{{Pe.fecha}}</div>
+                            </div>
+                            <div class="card-title d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight align-self-start">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle me-3 imgCard contain" src="{{Pe.habilidad.user.imagen.url}}" alt="..." />
+                                        <div class="small">
+                                            {% if Pe.habilidad.user.first_name|length == 0 or  Pe.habilidad.user.last_name|length == 0 %}
+                                            <div class="fw-bold">{{ Pe.habilidad.user.username }}</div>
+                                            {% else %}
+                                            <div class="fw-bold">{{ Pe.habilidad.user.first_name }} {{ Pe.habilidad.user.last_name }}</div>
+                                            {% endif %}
+                                            {% staruser Pe.habilidad.user.id as starva%}
+                                            {% if starva != None %}
+                                            <div class="text-muted"><i class="fa-solid fa-star StarValoration" ></i> {{starva}}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if Pe.estado == 'Pendiente' %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    Esperando...
+                                </div>
+                                <form class="p-2 bd-highlight align-self-center" action="{% url 'CancelarSolicitud' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="IdCodigo" value="{{Pe.id}}" readonly>
+                                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                                </form>
+                                {% elif Pe.estado == 'Aceptado' %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Detalle_Pedido' Pe.id %}">Detalle</button>
+                                </div>
+                                <div class="p-2 bd-highlight align-self-center">
+                                    <a type="button" class="btn btn-danger " href="{% url 'Valorizacion_Pedido' Pe.id %}">Realizo Pedido?</a>
+
+                                </div>
+                                {% elif Pe.estado == 'Cancelado' %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    Cancelado
+                                </div>
+                                {% else %}
+                                <div class="p-2 bd-highlight align-self-center">
+                                    Finalizado..
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
                     {% endfor %}
                 </div>
 
@@ -117,6 +182,7 @@
         {% endif %}
 
         </div>
-    </section>
-
+</section>
+{% include 'app/ModalTemplate.html' %}
+{% include 'app/Mensaje.html' %}
 {% endblock %}

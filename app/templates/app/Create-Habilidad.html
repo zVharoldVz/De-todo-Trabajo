@@ -1,73 +1,52 @@
-<div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Agregar Habilidad</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<form class="form-floating row g-3" enctype="multipart/form-data" method="post" action="{% url 'CreateHabili' %}">
+{% load widget_tweaks %}
+{% load Filtrospersonalizado %}
+<form method="post" enctype="multipart/form-data" action="">
   {% csrf_token %}
-  <div class="modal-body">
-    <div class="card" >
-      <div class="card-body">
-          <div class="row g-2">
-            <div class="col-md">
-              <div class="form-floating">
-                  {{ formhabildades.nombrehabilidad }}
-                <label for="floatingInputGrid">Ingrese Habilidad</label>
-              </div>
-            </div>
-            <div class="col-md">
-              <div class="form-floating">
-                  {{ formhabildades.tipoTrabajo }}
-                <label for="floatingSelectGrid">Tipo de trabajo</label>
-              </div>
-            </div>
-            <div class="form-floating">
-              {{ formhabildades.descripcion }}
-              <label for="floatingTextarea2">Descripcion</label>
-            </div>
 
-            <div class="input-group mb-3">
-              {{ formhabildades.images }}
-            </div>
-          </div>
-      </div>
-      
+  <div class="modal-header">
+    <h3 class="modal-title">Create Book</h3>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+    </button>
+  </div>
+
+  <div class="modal-body row g-2">
+
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary">Agregar</button>
-  </div>
-</form>
-{% block Script %}
-  <script>
-        //<img id="imagenPrevisualizacion">
-        //<div id="demo"></div>
-    const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
-        $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
 
-      // Escuchar cuando cambie
-        $seleccionArchivos.addEventListener("change", () => {
-        // Los archivos seleccionados, pueden ser muchos o uno
-        const archivos = $seleccionArchivos.files;
-        // Si no hay archivos salimos de la función y quitamos la imagen
-        if (!archivos || !archivos.length) {
-            $imagenPrevisualizacion.src = "";
-            return;
-        }
-        let txt = "";
-        for (let i = 0, numFiles = archivos.length; i < numFiles; i++) {
-            const file = archivos[i];
-        //    const primerArchivo = archivos[x];
-            const objectURL = URL.createObjectURL(file);
-            txt += "<img src='"+objectURL+"'>" + " ";
-        }
-        document.getElementById("demo").innerHTML = txt;
-        // Ahora tomamos el primer archivo, el cual vamos a previsualizar
-        //const primerArchivo = archivos[0];
-        // Lo convertimos a un objeto de tipo objectURL
-        //const objectURL = URL.createObjectURL(primerArchivo);
-        // Y a la fuente de la imagen le ponemos el objectURL
-        //$imagenPrevisualizacion.src = objectURL;
-        });
-  </script>
-{% endblock %}
+    {% for field in form %}
+      {% if not forloop.last%}
+      {% get_colum forloop.counter0 6 12 2 as dato%}
+        <div class="col-md-{{ dato }}">
+          <div class="form-floating">
+            {% render_field field class="form-control" placeholder=field.label %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          </div>
+          <div class="{% if field.errors %} invalid{% endif %}">
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+      <div class="{% if field.errors %} invalid{% endif %}">
+        {% for error in field.errors %}
+          <p class="help-block">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Create</button>
+  </div>
+
+</form>

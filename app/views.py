@@ -1,21 +1,28 @@
 
+from cgi import print_arguments
 from datetime import datetime
+from pyexpat import model
 from typing import ContextManager
+from urllib import request
 from venv import create
 from django.conf import settings
 from django.http.response import HttpResponse
-from django.shortcuts import redirect, render,get_object_or_404
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.auth import login
+from django.contrib.auth import login,get_user_model
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.urls import reverse, reverse_lazy
 from django.views.generic.list import ListView
+from django.db.models import Q
+from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView
 from .models import *
 from .forms import *
 
+User = get_user_model()
 # Create your views here.
 def app(request):
     return render(request,"app/index.html")
@@ -39,7 +46,6 @@ def usuario_new(request):
         if form.is_valid():
             form.save(commit=True)
             return redirect ('app')
-
     else :
         form = UserRegisterForm()
 
@@ -49,16 +55,13 @@ def usuario_new(request):
 @login_required
 def myaccount(request):
     context ={}
-    context["ExtraDato"] = ExtraDato.objects.get(user_id=request.user.id)
-    context["Foto_perfil"] = Foto_perfil.objects.get(user_id=request.user.id)
     context["habilidades"] = Habilidades.objects.filter(user_id=request.user.id).select_related('tipoTrabajo')
-
     return render(request,"app/myaccount.html", context)
 
 @login_required
 def upload_image_User_view(request):
 
-    foto= Foto_perfil.objects.get(user_id=request.user.id)
+    foto= User.objects.get(user_id=request.user.id)
     if request.method == "POST":
         form = UploadImageusaerForm(request.POST, request.FILES,instance=foto)
         if form.is_valid():
@@ -75,45 +78,41 @@ def upload_image_User_view(request):
 
     return render(request,"app/UploadImageusaer.html",context)
 
-@login_required
-def User_edit(request):
-    context ={}
-    extra = ExtraDato.objects.get(user_id=request.user.id)
-    form = UserEditForm(request.POST,instance = request.user)
-    formExtra  = ExtraEditForm(request.POST,instance = extra)
-    if request.method == 'POST':
-        #if form.is_valid():
-        if form.is_valid() and formExtra.is_valid():
+# Update
+class User_edit(LoginRequiredMixin,BSModalUpdateView):
+    model=User
+    template_name = 'app/User_Edit.html'
+    form_class = UserEditForm
+    success_message = '¡Se Modifico correctamente!'
+    success_url = reverse_lazy('myaccount')
+
+    def get_object(self):
+        return User.objects.get(id=self.request.user.id)
+
+    def get_context_data(self, **kwargs):
+        context = super(User_edit, self).get_context_data(**kwargs)
+        if 'form' not in context: context['form'] = self.form_class(self.request.GET,instance=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        if not self.request.is_ajax():
             form.save(commit=True)
-            formExtra.save(commit=True)
-            messages.success(request, '¡Se Modifico correctamente!')
-            return redirect ('myaccount')
-    else :
-        form = UserEditForm(instance = request.user)
-        formExtra = ExtraEditForm(instance = extra)
+        return super().form_valid(form)
 
-    context["form"] = form
-    context["formExtra"] = formExtra 
-    return render(request,"app/User_Edit.html", context) 
+class Create_habili(LoginRequiredMixin,BSModalCreateView):
+    template_name = 'app/Create-Habilidad.html'
+    form_class = habilidadesFullForm
+    success_message = '¡Se agrego correctamente!'
+    success_url = reverse_lazy('myaccount')
 
-@login_required
-def Create_habili(request):
-    context ={}
-    if request.method == "POST":
-        formhabilidades = habilidadesFullForm(request.POST,request.FILES,instance=Habilidades(user=request.user))
-        files = request.FILES.getlist('images')
-        if formhabilidades.is_valid():
-            habili=formhabilidades.save(commit=True)
+    def form_valid(self, form):
+        files = self.request.FILES.getlist('images')
+        if not self.request.is_ajax():
+            form.instance.user_id = self.request.user.id
+            obj = form.save(commit=True)
             for f in files:
-                FotoTrabajo.objects.create(habilidad=habili,fotoTrabajo=f)
-            messages.success(request, '¡Se agrego correctamente!')
-            return redirect ('myaccount')
-    else :
-        formhabildades = habilidadesFullForm(request.FILES,instance=Habilidades(user=request.user))
-
-
-    context["formhabildades"] = formhabildades
-    return render(request,"app/Create-Habilidad.html", context)
+                FotoTrabajo.objects.create(habilidad=obj,fotoTrabajo=f)
+        return super().form_valid(form)
 
 @login_required
 def Habili_delete(request, id):
@@ -125,7 +124,6 @@ def Habili_delete(request, id):
 def Habili_edit(request, id):
     context ={}
     Habili = Habilidades.objects.get(id=id,user_id=request.user.id)
-
 
     files = request.FILES.getlist('images')
     if request.method == 'POST':
@@ -173,7 +171,8 @@ def Busquedaanunciofuncion(id):
     context ={}
     habilidades = Habilidades.objects.select_related('tipoTrabajo','user').get(id=id)
     context["habilidades"] = habilidades
-    context["Foto_perfil"] = Foto_perfil.objects.get(user_id=habilidades.user.id)
+    context["favorito"] = Favoritos.objects.filter(habilidad__id=id).count()
+    context["clasifiacion"] = Clasifiacion.objects.select_related('user').filter(habilidad_id=id)
     return context
 
 def Busquedaanuncio(request, id):
@@ -195,7 +194,6 @@ def Favorito(request):
 @login_required
 def Realizar_Pedido(request):
     idhabi= request.POST['id']
-
     Pedido.objects.create(fecha=datetime.now(),user_id=request.user.id,habilidad_id=idhabi,estado='Pendiente')
     messages.success(request, 'Solicitastes los servicios')
     return redirect ('Perfil_list',idhabi)
@@ -207,20 +205,56 @@ class Pedidos(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(Pedidos, self).get_context_data(**kwargs)
         return context
+
     def get_queryset(self):
-        queryset = Pedido.objects.select_related('habilidad','user')
+        queryset = Pedido.objects.select_related('habilidad','user').filter(Q(habilidad__user__id=self.request.user.id) | Q(user_id=self.request.user.id) )
         return queryset
 
-def prueba(request):
+def obtenerpedido(estado,id):
+    return Pedido.objects.filter(id=id).update(estado=estado)
+
+@login_required
+def AceptarSolicitud(request):
+    idpedido= request.POST['IdCodigo']
+    if "cancel" in request.POST:
+        obtenerpedido('Cancelado',idpedido)
+    else: 
+        obtenerpedido('Aceptado',idpedido)
+
+    return redirect ('Pedidos')
+
+@login_required
+def CancelarSolicitud(request):
+    idpedido= request.POST['IdCodigo']
+    obtenerpedido('Cancelado',idpedido)
+
+    return redirect ('Pedidos')
+
+@login_required
+def Detalle_Pedido(request, id):
     context ={}
+    context["Pedido"] = Pedido.objects.select_related('habilidad','user').get(id=id)
+    return render(request,"app/DetallePedido.html", context)   
+
+@login_required
+def Valorizacion_Pedido(request, id):
+    context ={}
+    habilid = Pedido.objects.select_related('habilidad','user').get(id=id)
+
     if request.method == "POST":
-        form = habilidadesfrom(request.POST,instance=Habilidades(user=request.user))
-        if form.is_valid():
-            form.save(commit=False)
-
-            return redirect ('prueba')
+        formClasificacion = ValoracionFullForm(request.POST,request.FILES,instance=Clasifiacion(user=request.user,habilidad=habilid.habilidad))
+        files = request.FILES.getlist('fotoValoracion')
+        if formClasificacion.is_valid():
+            Valora=formClasificacion.save(commit=True)
+            obtenerpedido("Finalizado",id)
+            for f in files:
+                FotoValoracion.objects.create(clasifiacion=Valora,fotoValoracion=f)
+            messages.success(request, '¡Se agrego correctamente!')
+            return redirect ('Pedidos')
     else :
-        form = habilidadesfrom(instance=Habilidades(user=request.user))
-    context["form_prueba"] = form
+        formClasificacion = ValoracionFullForm(request.FILES,instance=Clasifiacion(user=request.user,habilidad=habilid.habilidad))
 
-    return render(request,"app/prueba.html",context)
+    context["formClasificacion"] = formClasificacion
+    context["pedido"] = id
+    return render(request,"app/ValoracionPedido.html", context)    
+	
