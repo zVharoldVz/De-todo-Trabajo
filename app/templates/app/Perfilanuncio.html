@@ -3,61 +3,65 @@
 {% load Filtrospersonalizado %}
 {% block content %}
 <section class="py-5">
-    <div class="container px-3">
-        <div class="card mb-3 shadow border-0">
-            <div class="row g-0">
-                <div class="col-md-6 p-2">
-                    <div id="carouselExampleSlidesOnly" class="carousel slide rounded-3 my-3"  data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                        {% for foto in habilidades.id|existing_Fototrabajo %}
-                            {% get_active forloop.counter0 as dato%}
-                            <div class="carousel-item {{ dato }}">
-                                <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 rounded-3 my-3"  height="600px" style="object-fit: scale-down" alt="...">
-                            </div>
-                        {% empty %}
-                            <div class="carousel-item active">
-                                <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Sin+Imagen" class="d-block w-100 rounded-3 my-3" height="600px" style="object-fit: scale-down" alt="...">
-                            </div>
-                        {% endfor %}
-                        </div>
-                    </div>
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <div id="carouselExampleSlidesOnly" class="carousel slide rounded-3 card-img-top mb-5 mb-md-0 h-100" data-bs-ride="carousel">
+					<div class="carousel-inner">
+					{% for foto in habilidades.id|existing_Fototrabajo %}
+						{% get_active forloop.counter0 as dato%}
+						<div class="carousel-item {{ dato }}">
+							<img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 imgcaru" alt="...">
+						</div>
+					{% empty %}
+						<div class="carousel-item active">
+							<img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Sin+Imagen" class="d-block w-100"  alt="...">
+						</div>
+					{% endfor %} 
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+                {% if habilidades.user.first_name|length == 0 or habilidades.user.last_name|length == 0 %}
+                <a href="#!" class="text-mute"><i class="fa-solid fa-user"></i> <span class="text-muted">{{habilidades.user.username}}</span></a>
+                {% else %}
+                <a href="#!" class="text-mute"><i class="fa-solid fa-user"></i> <span class="text-muted">{{ habilidades.user.first_name }} {{ habilidades.user.last_name }}</span></a>
+                {% endif %}
 
+                <h1 class="display-5 fw-bolder text-break">{{habilidades.nombrehabilidad}}</h1>
+
+                <div class="small mb-1"><i class="fa-solid fa-location-dot"></i> <span class="text-muted">{{habilidades.user.distrito}}-{{habilidades.user.departamento}}</span></div>
+                <div class="rating-box">
+                    {% starHabilidad habilidades.id as starva%}
+                    {% starHabilidadporcentaje starva as starvaporce%}
+                    <div class="rating-box__items">
+                        <div class="rating-stars">
+                            <img src="{% static 'app/images/grey-star.svg' %}" alt="">
+                            
+                            <div class="filled-star" style="width:{{starva}}%"></div>
+                        </div>
+                        
+                        <span class="ml-1"><b>{{starva}}</b></span>
+                    </div>
+                    <a href="#!" class="text-muted">({{valor_datos_comentarios}} comentarios)</a>
                 </div>
-                <div class="col-md-6">
-                    <div class="card-header h3 bg-transparent border-0 text-capitalize">{{habilidades.nombrehabilidad}}</div>
-                    <div class="card-body">
-                    <div class="card-title">
-                        <div class="d-flex align-items-center">
-                            <div class="small">
-                                {% starHabilidad habilidades.id as starva%}
-                                {% if starva != None %}
-                                <div class="text-muted"><i class="fa-solid fa-star StarValoration" ></i> {{starva}}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <p class="card-text" style="min-height: 31vh">{{habilidades.descripcion}}.</p>
-                    </div>
-
-                    <div class="d-grid d-sm-flex justify-content-sm-center justify-content-xl-center py-3 card-footer border-0">
-                        <form action="{% url 'SoliPedidos' %}" method="post">{% csrf_token %}
-                            <input type="hidden" name="id" value="{{habilidades.id}}" readonly>
-                            <button type="submit" class="btn btn-primary btn-lg px-4 me-sm-3" >Adquirir Servicios</button>
-                        </form>
-                        <form action="{% url 'Favorite' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="txtCodigo" value="{{habilidades.id}}" readonly>
-                            <button class="btn btn-danger btn-lg" type="submit"><i class="fa-regular fa-heart"></i><span class="badge" id="favoritenum">{{favorito}}</span></button>
-                        </form>
-                    </div>
-
+                <p class="lead text-break">{{habilidades.descripcion}}.</p>
+                <div class="d-flex">
+                    <form action="{% url 'SoliPedidos' %}" method="post" class="me-3">
+                        {% csrf_token %}   
+						<input type="hidden" name="id" value="{{habilidades.id}}" readonly>
+						<button type="submit" class="btn btn-outline-dark flex-shrink-0" >Adquirir Servicios</button>
+					</form>
+					<form action="{% url 'Favorite' %}" method="post">
+						{% csrf_token %}
+						<input type="hidden" name="txtCodigo" value="{{habilidades.id}}" readonly>
+						<button class="btn btnfavorito flex-shrink-0 " type="submit">
+                            <i class="fa-regular fa-heart"></i><span class="badge textbutton" id="favoritenum">{{favorito}}</span>
+                        </button>
+					</form>
                 </div>
             </div>
-        </div>    
-        <section>
-            
-        </section>
-        {% include 'app/Mensaje.html' %}
+        </div>
     </div>
 </section>
 <!-- Comments section-->
@@ -70,7 +74,9 @@
                         {% for Com in clasifiacion %}
                             <!-- Single comment-->
                             <div class="d-flex">
-                                <div class="flex-shrink-0"><img class="rounded-circle imgCard contain" src="{{Com.user.imagen.url}}" alt="..." /></div>
+                                <div class="flex-shrink-0">
+                                    <img class="rounded-circle imgCard contain" src="{{Com.user.imagen.url}}" alt="..." />
+                                </div>
                                 <div class="ms-3">
                                     {% staruser Com.user.id as starva%}
                                     {% if Com.user.first_name|length == 0 or  Com.last_name|length == 0 %}
@@ -109,30 +115,59 @@
                 </div>
             </div>
             <div class="col-xl-3">
-                <div class="card border-0">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="text-center">
+                
+                <h3 class="fw-bolder mb-4">Otros trabajos</h3>
+                {% for Otros in Otrotrabajos %}
+                    <div class="row py-2 justify-content-center"> 
+                        <div class="card h-50">
 
-                                <div class="h6 fw-bolder">Datos personales</div>
-                                <img class="imgPerfil cover rounded-circle mb-4 px-4" src="{{habilidades.user.imagen.url}}" alt="..." />
-
-                                <div class="h6 fw-bolder">{{ habilidades.user.first_name }} {{ habilidades.user.last_name }}</div>
-                                {% staruser habilidades.user.id as starva%}
-                                {% if starva != None %}
-                                <div class="text-muted"><i class="fa-solid fa-star StarValoration" ></i> {{starva}}</div>
-                                {% endif %}
-                                <p class="text-muted mb-4"><a href="#!">{{ habilidades.user.email }}</a></p>
-
-                                <div class="h6 fw-bolder">Redes Sociales</div>
-                                <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-twitter"></i></a>
-                                <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-facebook"></i></a>
-                                <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-whatsapp"></i></a>
+                            <!-- Product image-->
+                            <div class="carousel slide card-img-top" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    {% for foto in Otros.id|existing_Fototrabajo %}
+                                    {% get_active forloop.counter0 as dato%}
+                                    <div class="carousel-item {{ dato }} otrotrabajos">
+                                        <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100" alt="...">
+                                    </div>
+                                    {% empty %}
+                                    <div class="carousel-item active">
+                                        <img src="https://dummyimage.com/600x500/ced4da/6c757d&text=Sin+Imagen" alt="...">
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-
+                            <!-- Product details-->
+                            <div class="card-body p-2">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{Otros.nombrehabilidad}}</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning">
+                                        <div class="rating-box">
+                                            {% starHabilidad Otros.id as starva%}
+                                            {% starHabilidadporcentaje starva as starvaporce%}
+                                            <div class="rating-box__items">
+                                                <div class="rating-stars">
+                                                    <img src="{% static 'app/images/grey-star.svg' %}" alt="">
+                                                    
+                                                    <div class="filled-star" style="width:{{starva}}%"></div>
+                                                </div>
+                                                
+                                                <span class="ml-1"><b>{{starva}}</b></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'Perfil_list' Otros.id %}">Ver mas</a></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    {% empty %}
+                    no tiene
+                {% endfor %}
             </div>
         </div>
     </div>

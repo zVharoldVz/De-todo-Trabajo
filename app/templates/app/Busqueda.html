@@ -29,45 +29,57 @@
                 </article>
 
                   <div class="row gx-2 row-cols-1 row-cols-sm-2 row-cols-xl-4">
-                  {% for Ha in habilidades %}
-                    <div class="col-lg-4 mb-5" id="myTable">
+                    {% for Ha in habilidades %}
+                    <div class="col-lg-4 mb-5">
                       <div class="card h-100 shadow border-0">
-                          <div id="carouselExampleSlidesOnly" class="carousel slide card-img-top" height="160px" data-bs-ride="carousel">
+                          <div class="carousel slide card-img-top" data-bs-ride="carousel">
                             <div class="carousel-inner">
                               {% for foto in Ha.id|existing_Fototrabajo %}
-                                {% get_active forloop.counter0 as dato%}
-                                <div class="carousel-item {{ dato }}">
-                                  <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 img_prueba"  height="160px" style="object-fit: scale-down" alt="...">
-                                </div>
+                              {% get_active forloop.counter0 as dato%}
+                              <div class="carousel-item {{ dato }}">
+                                <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100" alt="...">
+                              </div>
                               {% empty %}
-                                <div class="carousel-item active">
-                                  <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Sin+Imagen" class="d-block w-100" alt="...">
-                                </div>
+                              <div class="carousel-item active">
+                                <img src="https://dummyimage.com/600x500/ced4da/6c757d&text=Sin+Imagen" alt="...">
+                              </div>
                               {% endfor %}
                             </div>
                           </div>
-                          
                           <div class="card-body p-4">
-                            <article>
-                              <header class="mb-1">
-                              <a class="text-decoration-none link-dark stretched-link truncate-1" href="{% url 'Perfil_list' Ha.id %}"><div class="h5 card-title mb-3 text-capitalize ">{{Ha.nombrehabilidad}}</div></a>
-                              </header>
-                              <section class="mb-5">
-                                <p class="fs-6 mb-4 truncate-4">{{Ha.descripcion}}</p>
-                              </section>
-                              <footer><div class="small m-0 fst-italic ">Publicado por {{ Ha.user.first_name }} {{ Ha.user.last_name }}</div></footer>
-                            </article>
+                              <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{ Ha.tipoTrabajo.tipotrabajo }}</div>
+                              <a class="text-decoration-none link-dark stretched-link" href="{% url 'Perfil_list' Ha.id %}"><h5 class="card-title mb-3 text-capitalize">{{Ha.nombrehabilidad}}</h5></a>
+                              <p class="card-text mb-0 truncate-2">{{Ha.descripcion}}</p>
+                          </div>
+                          <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                              <div class="d-flex align-items-end justify-content-between">
+                                  <div class="d-flex align-items-center">
+                                      <img class="rounded-circle me-3 imgCard" src="{{Ha.user.imagen.url}}" alt="..." />
+                                      <div class="small">
+                                          
+                                          <div class="">
+                                            {% if Ha.user.first_name|length == 0 or  Ha.user.last_name|length == 0 %}
+                                            <div class="fw-bold text-capitalize">{{ Ha.user.username }}</div>
+                                            {% else %}
+                                            <div class="fw-bold text-capitalize">{{ Ha.user.first_name }} {{ Ha.user.last_name }}</div>
+                                            {% endif %}
+                                            <span><i class="fas fa-comment-alt Comentario"></i>624</span>
+                                            <span><i class="fa-solid fa-star StarValoration "></i>4.5</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
                       </div>
-                    </div>
+                  </div>
+
                     {% empty %}
-                    <div class="fa-2x">
-                      <span  style="display: inline-block;">
-                        <i class="fa-solid fa-xmark"></i> Sin resultados
-                      </span>
-                      
-                    </div>
-                  {% endfor %}
+                      <div class="fa-2x">
+                        <span  style="display: inline-block;">
+                          <i class="fa-solid fa-xmark"></i> Sin resultados
+                        </span>
+                      </div>
+                    {% endfor %}
                   </div>
                     
                   {% if is_paginated %}

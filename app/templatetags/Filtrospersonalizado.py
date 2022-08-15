@@ -26,11 +26,27 @@ def Pedido_Realizado(value,id):
 
 @register.simple_tag
 def starHabilidad(value):
-    return Clasifiacion.objects.filter(habilidad_id=value).aggregate(Avg('puntuacion'))['puntuacion__avg']
+    Dato = Clasifiacion.objects.filter(habilidad_id=value).aggregate(Avg('puntuacion'))['puntuacion__avg']
+    if (Dato is None):
+        Dato=0
+    return Dato
+
+@register.simple_tag
+def starHabilidadporcentaje(value):
+    return (100*value)/5
 
 @register.simple_tag
 def staruser(value):
     return Clasifiacion.objects.filter(habilidad__user__id=value).aggregate(Avg('puntuacion'))['puntuacion__avg']
+
+@register.simple_tag
+def ComentariosHabilidad(value):
+    Dato = Clasifiacion.objects.filter(habilidad_id=value).aggregate(Avg('puntuacion'))['puntuacion__avg']
+    if (Dato is None):
+        Dato=0
+    return Dato
+
+
 
 @register.simple_tag
 def get_active(n):

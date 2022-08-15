@@ -19,6 +19,10 @@ class User(AbstractUser):
     dni = models.CharField(max_length=8)
     Direcion = models.CharField(max_length=100)
     imagen = models.ImageField(upload_to='DeTodoTrabajo/FotoUser/',default='DeTodoTrabajo/Defaut/User-Login.png')
+    distrito = models.CharField(max_length=50)
+    provincia = models.CharField(max_length=50)
+    departamento = models.CharField(max_length=50)
+    pais = models.CharField(max_length=50)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'dni',]
 

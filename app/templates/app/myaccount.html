@@ -7,35 +7,31 @@
 <div class="container">
   <div class="row g-5">
     <div class="col-md-3 col-lg-3 ">
-      <div class="card border-0 bg-light mt-xl-5">
+      <div class="container mt-4 mb-4 p-3 d-flex justify-content-center"> 
+        
+        <div class="cardperfil p-4 shadow border-0"> 
 
-        <div class="card-body p-4 py-lg-5">
-            <div class="d-flex align-items-center justify-content-center">
-                <div class="text-center">
-                  <h5 class="card-title">Bibliografia</h5>
-                  <div  class="position-relative">
-                    <img class="imgPerfil cover rounded-circle mb-4 px-4" src="{{user.imagen.url}}" alt="..."  />
-                    <button type="button" class="position-absolute Camara translate-middle btn btn-primary modal-example" data-url="{% url 'UploadImageUser' %}"><i class="fa-solid fa-camera"></i></button>
-                  </div>
-                  <div class="h6 fw-bolder">{{ user.first_name }} {{ user.last_name }}</div>
-                  <p class="text-muted mb-4"><a href="#!">{{ user.email }}</a></p>
-                  
-                  <div class="h6 fw-bolder">Redes Sociales</div>
-                  <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-twitter"></i></a>
-                  <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-facebook"></i></a>
-                  <a class="fs-5 px-2 link-dark" href="#!"><i class="fa-brands fa-whatsapp"></i></a>
-                  <hr>
-                  <div class="h6 fw-bolder">
+          <div class=" image d-flex flex-column justify-content-center align-items-center"> 
 
-                    <button type="button" class="update-User btn btn-primary" data-form-url="{% url 'Edit_User'%}">Editar</button>
-                    <button type="button" class="btn btn-primary">HASTE PRO</button>
-                  </div>
-                  
-                </div>
-            </div>
+            <button type="button" class="btnperfil btn-primary modal-example" data-url="{% url 'UploadImageUser' %}"> 
+              <img src="{{user.imagen.url}}" height="100" width="100" />
+            </button> 
+
+            <span class="name mt-3 text-center">{{ user.first_name }} {{ user.last_name }}</span> 
+            
+            <div class=" d-flex mt-2"> 
+              <button class="btn1 btn-primary update-User" data-form-url="{% url 'Edit_User'%}">Edit Profile</button> 
+            </div> 
+            
+            
+            <div class=" px-2 rounded mt-4 date "> 
+              <span class="join">{{ user.date_joined|date:'M d, Y' }}</span> 
+            </div> 
+          </div> 
+
         </div>
-
-    </div>
+      
+      </div>
     </div>
     <div class="col-md-7 col-lg-8 order-md-last">
       <section class="py-5">
@@ -48,54 +44,55 @@
 
               <button id="create-Habiiti" class="btn btn-primary" type="button" name="button">Registar</button>
             </div>
-            {% for Ha in habilidades %}
+            
             <div class="row gx-2 row-cols-1 row-cols-sm-2 row-cols-xl-3">
-              <div class="col-lg-4 mb-5">
-                <div class="card h-100 shadow border-0">
-
-                  <div id="carouselExampleSlidesOnly" class="carousel slide card-img-top" data-bs-ride="carousel">
+              {% for Ha in habilidades %}
+                <div class="cardhabili shadow border-0">
+                  <ul class="ul">
+                    <li>
+                      <button class="modal-example" data-url="{% url 'Habili_edit' Ha.id %}"><i class="fa-solid fa-pen"></i></button>
+                    </li>
+                    <li>
+                      <a type="button" href="{% url 'Habili_delete' Ha.id  %}" ><i class="fa-solid fa-trash-can"></i></a> 
+                    </li>
+                  </ul>
+                  <div class="carousel slide card-img-top" data-bs-ride="carousel">
                     <div class="carousel-inner">
                       {% for foto in Ha.id|existing_Fototrabajo %}
-                        {% get_active forloop.counter0 as dato%}
-                        <div class="carousel-item {{ dato }}">
-                          <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100 img_prueba"  height="135px"  style="object-fit: scale-down" alt="...">
-                        </div>
+                      {% get_active forloop.counter0 as dato%}
+                      <div class="carousel-item {{ dato }}">
+                        <img src="{{foto.fotoTrabajo.url}}" class="d-block w-100" alt="...">
+                      </div>
                       {% empty %}
-                        <div class="carousel-item active">
-                          <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Loading.." class="d-block w-100" alt="...">
-                        </div>
+                      <div class="carousel-item active">
+                        <img src="https://dummyimage.com/600x350/ced4da/6c757d&text=Loading.." class="d-block w-100" alt="...">
+                      </div>
                       {% endfor %}
                     </div>
                   </div>
-
-                  <div class="card-img-top">
-                    <a type="button" class="btn-close position-absolute top-0 end-0" href="{% url 'Habili_delete' Ha.id  %}" ></a> 
+                  <div class="con-text">
+                    <h2>{{Ha.nombrehabilidad}}</h2>
+                    <p>
+                      {{Ha.descripcion}}
+                    </p>
                   </div>
-                  <div class="card-body p-4">
-                      <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{ Ha.tipoTrabajo.tipotrabajo }}</div>
-                      <a class="text-decoration-none" href="#!"><h5 class="card-title mb-3">{{Ha.nombrehabilidad}}</h5></a>
-                      <p class="card-text mb-0 text-truncate">{{Ha.descripcion}}</p>
-                      <button type="button" class="btn btn-primary modal-example" data-url="{% url 'Habili_edit' Ha.id %}">Editar</button>
-                      <a type="button" class="btn btn-danger " href="{% url 'Habili_delete' Ha.id  %}" >Eliminar</a> 
-                  </div>
+                  
                 </div>
+              {% empty %}
+              <div class="fa-2x">
+                <span  style="display: inline-block;">
+                  <i class="fa-solid fa-arrow-turn-up fa-flip-horizontal"></i> Comienza publicando tus servicios aqui
+                </span>
+                
               </div>
-            </div>
-            {% empty %}
-            <div class="fa-2x">
-              <span  style="display: inline-block;">
-                <i class="fa-solid fa-arrow-turn-up fa-flip-horizontal"></i> Comienza publicando tus servicios aqui
-              </span>
+              {% endfor %}
               
             </div>
-              
-
-            {% endfor %}
+            
             
         </div>
       </section>
 
-     
       <!-- Modal -->
       {% include 'app/ModalTemplate.html' %}
     </div>

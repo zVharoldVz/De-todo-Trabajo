@@ -61,7 +61,7 @@ def myaccount(request):
 @login_required
 def upload_image_User_view(request):
 
-    foto= User.objects.get(user_id=request.user.id)
+    foto= User.objects.get(id=request.user.id)
     if request.method == "POST":
         form = UploadImageusaerForm(request.POST, request.FILES,instance=foto)
         if form.is_valid():
@@ -170,9 +170,12 @@ class Busqueda(ListView):
 def Busquedaanunciofuncion(id):
     context ={}
     habilidades = Habilidades.objects.select_related('tipoTrabajo','user').get(id=id)
+    clasifiaciones = Clasifiacion.objects.select_related('user').filter(habilidad_id=id)
     context["habilidades"] = habilidades
+    context["Otrotrabajos"] = Habilidades.objects.select_related('tipoTrabajo','user').filter(user_id=habilidades.user.id).exclude(id=habilidades.id)[:5]
     context["favorito"] = Favoritos.objects.filter(habilidad__id=id).count()
-    context["clasifiacion"] = Clasifiacion.objects.select_related('user').filter(habilidad_id=id)
+    context["clasifiacion"] = clasifiaciones
+    context["valor_datos_comentarios"]=clasifiaciones.count()
     return context
 
 def Busquedaanuncio(request, id):

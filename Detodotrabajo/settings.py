@@ -80,9 +80,13 @@ WSGI_APPLICATION = 'Detodotrabajo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'Datos.db',
-    }
+            'ENGINE': 'django.db.backends.mysql', 
+            'NAME': 'detodotrabajo',
+            'USER': 'root',
+            'PASSWORD': 'UPNWEB1',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
 }
 
 

@@ -58,9 +58,14 @@ class UserEditForm(BSModalModelForm):
 	dni = forms.IntegerField(required=True, widget= forms.TextInput(attrs={'class':'form-control'}))
 	Direcion = forms.CharField(max_length=100,widget=forms.TextInput(attrs={'class':'form-control'}))
 
+	distrito = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+	provincia = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+	departamento = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+	pais = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control'}))
+
 	class Meta:
 		model = User
-		fields = ['first_name','last_name','telefono', 'dni', 'Direcion']
+		fields = ['first_name','last_name','telefono', 'dni', 'Direcion','distrito','provincia', 'departamento', 'pais']
 	def clean(self):
 		# data from the form is fetched using super function
 		super(UserEditForm, self).clean()
